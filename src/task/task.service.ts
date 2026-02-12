@@ -23,7 +23,7 @@ export class TaskService {
 
     finById(id: number) {
 
-        const task =  this.tasks.find(task => task.id === id);
+        const task = this.tasks.find(task => task.id === id);
 
         if (!task) {
             throw new NotFoundException('Task not found')
@@ -33,11 +33,14 @@ export class TaskService {
     }
 
     create(dto: CreateTastDto) {
-        const { title } = dto;
+        const { title, description, priority, tags } = dto;
 
         const newTask = {
             id: this.tasks.length + 1,
             title,
+            description, 
+            priority, 
+            tags,
             isCompleted: false
         }
 
@@ -56,7 +59,7 @@ export class TaskService {
         return task;
     }
 
-    patchUpdate(id: number, dto: Partial<UpdateTastDto>){
+    patchUpdate(id: number, dto: Partial<UpdateTastDto>) {
         const task = this.finById(id);
 
         Object.assign(task, dto);
@@ -64,11 +67,11 @@ export class TaskService {
         return task;
     }
 
-    delete(id: number){
+    delete(id: number) {
         const task = this.finById(id);
 
         this.tasks = this.tasks.filter(task => task.id !== id);
-        return true; 
+        return true;
     }
 
 }

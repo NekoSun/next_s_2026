@@ -1,29 +1,58 @@
-import { Body, Controller, Get, Headers, Param, Post, Query, Req, Res } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Headers, Param, Post, Put, Query, Req, Res } from '@nestjs/common';
 import type { Request, Response } from 'express';
+import { MovieService } from './movie.service';
+import { createMovieDto } from './dto/movie.dto';
 
 @Controller('movies')
 export class MovieController {
+  constructor(private readonly movieService: MovieService) { }
+
   @Get()
-  findAll(@Query('genre') genre: string) {
-    return genre 
-    ? `Фильмы в жанре: ${genre}`
-    : [
-      {
-        title: 'Fine Club'
-      },
-      {
-        title: 'Pulp Fiction'
-      }
-    ]
+  findAll() {
+    return this.movieService.findAll();
+  }
+
+  @Post()
+  create(@Body() dto: createMovieDto) {
+    return this.movieService.create(dto);
   }
 
   @Get(':id')
   findById(@Param('id') id: string) {
-    return {id}
+    return this.movieService.findById(+id);
+  }
+
+  @Put(':id')
+  update(@Param('id') id: string, @Body() dto: createMovieDto) {
+    return this.movieService.update(+id, dto);
+  }
+
+  @Delete(':id')
+  delete(@Param('id') id: string) {
+    return this.movieService.delete(+id);
+  }
+
+  @Get()
+  findAllO(@Query('genre') genre: string) {
+    return genre
+      ? `Фильмы в жанре: ${genre}`
+      : [
+        {
+          title: 'Fine Club'
+        },
+        {
+          title: 'Pulp Fiction'
+        }
+      ]
+  }
+
+  @Get(':id')
+  findByIdO(@Param('id') id: string) {
+    return { id }
   }
 
   @Post()
-  create(@Body() body: {title: string, genr: string}) {
+  createO(@Body() body: { title: string, genr: string }) {
     // return `Фильм "${title}" был добавлен`
     return body
   }
@@ -36,7 +65,7 @@ export class MovieController {
 
   @Get('user-agent')
   getUserAgent(@Headers('user-agent') userAgent: string) {
-    return {userAgent}
+    return { userAgent }
 
   }
 
@@ -54,6 +83,6 @@ export class MovieController {
 
   @Get('response')
   getResponseDetails(@Res() res: Response) {
-    res.status(201).json({message: 'Прывет Мыр!'})
+    res.status(201).json({ message: 'Прывет Мыр!' })
   }
 }

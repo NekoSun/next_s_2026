@@ -5,13 +5,16 @@ import {
   CreateDateColumn,
   Entity,
   Generated,
+  JoinColumn,
   JoinTable,
   ManyToMany,
   OneToMany,
+  OneToOne,
   PrimaryColumn,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { MoviePosterEntity } from './poster.entity';
 
 export enum Genre {
   ACTION = 'action',
@@ -45,6 +48,20 @@ export class MovieEntity {
     unsigned: true,
   })
   releaseYear: number;
+
+  @Column({
+    name: 'poster_id',
+    type: 'uuid',
+    nullable: true
+  })
+  posterId: string;
+
+  @OneToOne(() => MoviePosterEntity, (poster) => poster.movie, {
+    onDelete: 'CASCADE',
+    nullable: true
+  })
+  @JoinColumn({ name: 'poster_id' })
+  poster: MoviePosterEntity | null;
 
   @Column({
     type: 'decimal',

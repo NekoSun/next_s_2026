@@ -19,6 +19,9 @@ export class createMovieDto {
   @Max(new Date().getFullYear())
   releaseYear: number;
 
+  @IsString()
+  imageUrl: string;
+
   @IsArray()
   @IsUUID('4', { each: true })
   actorsId: string[];
